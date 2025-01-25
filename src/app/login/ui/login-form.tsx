@@ -43,7 +43,6 @@ export function LoginForm() {
 				setErrors(result.errors);
 			} else {
 				resetForm();
-				console.log(result);
 				router.push("/admin");
 			}
 		} catch (error) {
