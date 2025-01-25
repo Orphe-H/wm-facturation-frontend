@@ -1,3 +1,8 @@
 export default function Dashboard() {
-	return <div className="flex min-h-screen">Tableau de bord</div>;
+	return (
+		<div>
+			<h1>Admin Dashboard</h1>
+			{/* Autres contenus de la page */}
+		</div>
+	);
 }
