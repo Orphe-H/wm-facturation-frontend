@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { login } from "../actions/login-action";
 import { useRouter } from "next/navigation";
+import { useAlertStore } from "@/stores/alert-store";
 
 export function LoginForm() {
 	const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ export function LoginForm() {
 	});
 	const [pending, setPending] = useState(false);
 	const [errors, setErrors] = useState<string | string[]>([]);
+	const setAlert = useAlertStore((state) => state.setAlert);
 	const router = useRouter();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +44,9 @@ export function LoginForm() {
 				setErrors(result.errors);
 			} else {
 				resetForm();
+
+				setAlert("Bienvenue Grand Patron", "success");
+
 				router.push("/admin");
 			}
 		} catch (error) {
