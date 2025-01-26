@@ -3,9 +3,18 @@
 import { useEffect } from "react";
 import { useProductStore } from "@/stores/product-store";
 import Swal from "sweetalert2";
+import { useAlertStore } from "@/stores/alert-store";
+import { ERROR_MESSAGES } from "@/lib/messages";
 
 export default function ProductsPage() {
-	const { products, fetchProducts, removeProduct } = useProductStore();
+	const {
+		products,
+		fetchProducts,
+		removeProduct,
+		removeErrors,
+		removeSuccess,
+	} = useProductStore();
+	const setAlert = useAlertStore((state) => state.setAlert);
 
 	useEffect(() => {
 		fetchProducts();
@@ -24,18 +33,29 @@ export default function ProductsPage() {
 				cancelButtonColor: "#3085d6",
 			}).then((result) => {
 				if (result.isConfirmed) {
-					// Appel API pour supprimer
 					removeProduct(id);
-					// sonner alert 
-					// Swal.fire(
-					// 	"Supprimé !",
-					// 	"Le produit a été supprimé.",
-					// 	"success"
-					// );
 				}
 			});
 		}
 	};
+
+	useEffect(() => {
+		if (removeSuccess === true) {
+			setAlert("Le produit a été supprimé.", "success");
+		}
+	}, [removeSuccess, removeErrors, setAlert]);
+
+	useEffect(() => {
+		if (removeErrors) {
+			if (Array.isArray(removeErrors)) {
+				removeErrors.forEach((error) => {
+					setAlert(error, "error");
+				});
+			} else {
+				setAlert(removeErrors || ERROR_MESSAGES.default, "error");
+			}
+		}
+	}, [removeErrors, setAlert]);
 
 	return (
 		<div className="mt-10">

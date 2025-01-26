@@ -16,7 +16,12 @@ interface ProductState {
 	removeProduct: (id: string) => void;
 }
 
-export const useProductStore = create<ProductState>((set) => ({
+export const useProductStore = create<
+	ProductState & {
+		removeErrors: string[] | string | null;
+		removeSuccess: boolean | null;
+	}
+>((set, get) => ({
 	products: [],
 	fetchProducts: async () => {
 		const response = await fetcher({ url: "/products" });
@@ -37,10 +42,29 @@ export const useProductStore = create<ProductState>((set) => ({
 				p.id === product.id ? { ...p, ...product } : p
 			),
 		})),
-	removeProduct: (
-		id // send remove request
-	) =>
-		set((state) => ({
-			products: state.products.filter((p) => p.id !== id),
-		})),
+	removeErrors: null,
+	removeSuccess: null,
+	removeProduct: async (id: string) => {
+		set({ removeErrors: null, removeSuccess: null });
+
+		const response = await fetcher({
+			url: `/products/${id}`,
+			method: "DELETE",
+		});
+
+		const { success } = response;
+
+		if (success) {
+			set({
+				removeSuccess: true,
+			});
+
+			await get().fetchProducts();
+		} else {
+			set({
+				removeSuccess: false,
+				removeErrors: response.errors,
+			});
+		}
+	},
 }));
