@@ -5,6 +5,7 @@ import { useProductStore } from "@/stores/product-store";
 import Swal from "sweetalert2";
 import { useAlertStore } from "@/stores/alert-store";
 import { ERROR_MESSAGES } from "@/lib/messages";
+import Link from "next/link";
 
 export default function ProductsPage() {
 	const {
@@ -58,8 +59,16 @@ export default function ProductsPage() {
 	}, [removeErrors, setAlert]);
 
 	return (
-		<div className="mt-10">
+		<div>
 			<h2 className="font-medium text-lg">Liste des produits</h2>
+			<div className="flex justify-end">
+				<Link
+					className="px-4 py-1 text-blue-500 rounded-md bg-blue-100 hover:bg-blue-200 border shadow-sm hover:shadow"
+					href="/admin/products/create"
+				>
+					Ajouter
+				</Link>
+			</div>
 			<div className="mt-4 overflow-x-auto shadow-sm">
 				<table className="min-w-full text-gray-800 mt-4">
 					<thead>
