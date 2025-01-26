@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { logout } from "./actions/logout-action";
 import { useAlertStore } from "@/stores/alert-store";
+import NavLink from "@/components/nav-link";
 
 export default function AdminLayout({
 	children,
@@ -50,24 +51,9 @@ export default function AdminLayout({
 					Application de facturation
 				</div>
 				<nav className="mt-2 flex-1 py-4 px-3 space-y-2">
-					<a
-						href="/admin/products"
-						className="block py-2 px-4 rounded hover:bg-gray-200"
-					>
-						Produits
-					</a>
-					<a
-						href="/admin/clients"
-						className="block py-2 px-4 rounded hover:bg-gray-200"
-					>
-						Clients
-					</a>
-					<a
-						href="/admin/invoices"
-						className="block py-2 px-4 rounded hover:bg-gray-200"
-					>
-						Factures
-					</a>
+					<NavLink href="/admin/products">Produits</NavLink>
+					<NavLink href="/admin/clients">Clients</NavLink>
+					<NavLink href="/admin/invoices">Factures</NavLink>
 				</nav>
 				<div className="p-4 text-sm text-gray-500">
 					© 2025 Bobby Orphé H.
@@ -76,12 +62,9 @@ export default function AdminLayout({
 				</div>
 			</aside>
 
-			{/* Contenu principal */}
 			<div className="flex-1 flex flex-col">
-				{/* Barre supérieure */}
 				<header className="h-16 border-b bg-gray-50 flex items-center justify-between px-6">
 					<h1 className="text-lg font-semibold">
-						{/* Tableau de bord */}
 					</h1>
 					<button
 						onClick={handleLogout}
