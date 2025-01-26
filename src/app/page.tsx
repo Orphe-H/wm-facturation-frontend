@@ -7,7 +7,7 @@ export default function Login() {
 		<div className="flex min-h-screen">
 			<div className="w-1/2 flex items-center justify-center">
 				<span className="text-3xl font-bold">
-					Waouh monde Facturation APP
+					Facturation APP
 				</span>
 			</div>
 			<div className="w-1/2 bg-gray-50 flex items-center justify-center">

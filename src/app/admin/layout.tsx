@@ -67,7 +67,7 @@ export default function AdminLayout({
 				<div className="p-4 text-sm text-gray-500">
 					© 2025 Bobby Orphé H.
 					<br />
-					Waouh monde Facturation
+					Facturation APP
 				</div>
 			</aside>
 

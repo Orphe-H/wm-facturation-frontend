@@ -15,8 +15,8 @@ import { GlobalAlert } from "@/components/global-alert";
 // });
 
 export const metadata: Metadata = {
-	title: "Facturation app",
-	description: "Waouh monde facturation app",
+	title: "Facturation APP",
+	description: "Facturation APP",
 };
 
 export default function RootLayout({
