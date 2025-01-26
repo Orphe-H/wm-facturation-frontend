@@ -46,3 +46,32 @@ export function toastAlert({ message, type }: AlertProps) {
 		toast.message(message);
 	}
 }
+
+export function getStatusLabel(string: string): string {
+	if (string === "paid") {
+		return "Payé";
+	} else if (string === "pending") {
+		return "En attente";
+	} else if (string === "cancelled") {
+		return "Annnulé";
+	} else {
+		return string;
+	}
+}
+
+export function formatDate(dateString: string | null) {
+	if (!dateString) {
+		return "";
+	}
+
+	const date = new Date(dateString);
+
+	const day = String(date.getDate()).padStart(2, "0");
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const year = date.getFullYear();
+
+	const hours = String(date.getHours()).padStart(2, "0");
+	const minutes = String(date.getMinutes()).padStart(2, "0");
+
+	return `${day}-${month}-${year} ${hours}:${minutes}`;
+}
