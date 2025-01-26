@@ -35,25 +35,18 @@ export function LoginForm() {
 		setPending(true);
 		setErrors([]);
 
-		try {
-			const result = await login(
-				new FormData(e.currentTarget as HTMLFormElement)
-			);
+		const result = await login(
+			new FormData(e.currentTarget as HTMLFormElement)
+		);
 
-			if (result.errors) {
-				setErrors(result.errors);
-			} else {
-				resetForm();
+		if (result.errors) {
+			setErrors(result.errors);
+		} else {
+			resetForm();
 
-				setAlert("Bienvenue Grand Patron 🙇‍♂️", "success");
+			setAlert("Bienvenue Grand Patron 🙇‍♂️", "success");
 
-				router.push("/admin");
-			}
-		} catch (error) {
-			setErrors("Une erreur s'est produite lors de la connexion");
-			console.error(error);
-		} finally {
-			setPending(false);
+			router.push("/admin");
 		}
 	};
 

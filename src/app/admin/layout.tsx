@@ -20,37 +20,29 @@ export default function AdminLayout({
 	const handleLogout = async () => {
 		setPending(true);
 
-		try {
-			const result = await logout();
+		const result = await logout();
 
-			if (result.success) {
-				setAlert("Déconnexion réussie.", "success");
+		if (result.success) {
+			setAlert("Déconnexion réussie.", "success");
+			router.push("/");
+		} else {
+			if (result.status_code === 401) {
+				setAlert(ERROR_MESSAGES.unauthorized, "error");
 				router.push("/");
 			} else {
-				if (result.status_code === 401) {
-					setAlert(ERROR_MESSAGES.unauthorized, "error");
-					router.push("/");
+				if (Array.isArray(result.errors)) {
+					result.errors.forEach((error) => {
+						setAlert(error, "error");
+					});
+				} else if (result.errors) {
+					setAlert(result.errors, "error");
 				} else {
-					if (Array.isArray(result.errors)) {
-						result.errors.forEach((error) => {
-							setAlert(error, "error");
-						});
-					} else if (result.errors) {
-						setAlert(result.errors, "error");
-					} else {
-						setAlert(ERROR_MESSAGES.default, "error");
-					}
+					setAlert(ERROR_MESSAGES.default, "error");
 				}
 			}
-		} catch (error) {
-			setAlert(
-				"Une erreur s'est produite lors de la déconnexion.",
-				"error"
-			);
-			console.error(error);
-		} finally {
-			setPending(false);
 		}
+
+		setPending(false);
 	};
 
 	return (
