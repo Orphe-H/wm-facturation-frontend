@@ -27,16 +27,15 @@ export default function AdminLayout({
 				router.push("/");
 			} else {
 				if (result.status_code === 401) {
-					setAlert(
-						ERROR_MESSAGES.unauthorized,
-						"error"
-					);
+					setAlert(ERROR_MESSAGES.unauthorized, "error");
 					router.push("/");
 				} else {
 					if (Array.isArray(result.errors)) {
 						result.errors.forEach((error) => {
 							setAlert(error, "error");
 						});
+					} else if (result.errors) {
+						setAlert(result.errors, "error");
 					} else {
 						setAlert(ERROR_MESSAGES.default, "error");
 					}
@@ -47,7 +46,7 @@ export default function AdminLayout({
 				"Une erreur s'est produite lors de la déconnexion.",
 				"error"
 			);
-			console.log(error);
+			console.error(error);
 		} finally {
 			setPending(false);
 		}
@@ -84,7 +83,6 @@ export default function AdminLayout({
 					</button>
 				</header>
 
-				{/* Contenu */}
 				<main className="flex-1 p-6">{children}</main>
 			</div>
 		</div>

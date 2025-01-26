@@ -25,24 +25,32 @@ interface AllStatResponseData {
 	latest_invoices: Array<Invoice>;
 }
 
-export const useDashboardStore = create<DashboardState>((set) => ({
+export const useDashboardStore = create<
+	DashboardState & { errors: string[] | string | null; isLoading: boolean }
+>((set) => ({
 	stats: {},
 	invoices: [],
+	errors: null,
+	isLoading: false,
 	fetchDashboardData: async () => {
+		set({ isLoading: true, errors: null });
+
 		const response = await fetcher({
 			url: "/stats/all",
 		});
 
 		const { success, data } = response;
 
-		console.log(data);
-
 		if (success && data) {
 			const { stats, latest_invoices } = data as AllStatResponseData;
 
 			set({ stats: stats, invoices: latest_invoices });
 		} else {
-			// return response, manage errors
+			set({
+				errors: response.errors,
+			});
 		}
+
+		set({ isLoading: false });
 	},
 }));
