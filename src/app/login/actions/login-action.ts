@@ -18,6 +18,7 @@ export async function login(
 			password: formData.get("password"),
 		}),
 		withToken: false,
+		enableLogout: false,
 	});
 
 	const { success, data } = response;
@@ -28,7 +29,7 @@ export async function login(
 			setAccessToken(access_token);
 		}
 
-		return { success: success };
+		return { success: true };
 	} else {
 		return response;
 	}

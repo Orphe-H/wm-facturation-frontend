@@ -1,10 +1,5 @@
 import { getAccessToken, getApiUrl, removeAccessToken } from "./helpers";
-
-const ERROR_MESSAGES = {
-	unauthorized: "Vous n'êtes pas autorisé. Veuillez vous reconnecter.",
-	default: "Une erreur s'est produite.",
-	requestFailed: "Une erreur s'est produite lors de la requête.",
-};
+import { ERROR_MESSAGES } from "./messages";
 
 interface FetcherOptions {
 	url: string;
@@ -33,10 +28,16 @@ export const fetcher = async <T>({
 		"Content-Type": "application/json",
 	};
 
-	if (accessToken) {
-		headers.Authorization = `Bearer ${accessToken}`;
-	} else {
-		// logout
+	if (withToken) {
+		if (accessToken) {
+			headers.Authorization = `Bearer ${accessToken}`;
+		} else {
+			return {
+				success: false,
+				status_code: 401,
+				errors: [ERROR_MESSAGES.unauthorized],
+			};
+		}
 	}
 
 	try {
@@ -48,15 +49,13 @@ export const fetcher = async <T>({
 
 		const statusCode = response.status;
 
-		if (enableLogout) {
-			if (statusCode === 401) {
-				removeAccessToken();
-				return {
-					success: false,
-					status_code: statusCode,
-					errors: [ERROR_MESSAGES.unauthorized],
-				};
-			}
+		if (statusCode === 401 && enableLogout) {
+			removeAccessToken();
+			return {
+				success: false,
+				status_code: statusCode,
+				errors: [ERROR_MESSAGES.unauthorized],
+			};
 		}
 
 		if (!response.ok) {

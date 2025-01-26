@@ -5,6 +5,7 @@ import { useState } from "react";
 import { logout } from "./actions/logout-action";
 import { useAlertStore } from "@/stores/alert-store";
 import NavLink from "@/components/nav-link";
+import { ERROR_MESSAGES } from "@/lib/messages";
 
 export default function AdminLayout({
 	children,
@@ -25,12 +26,20 @@ export default function AdminLayout({
 				setAlert("Déconnexion réussie.", "success");
 				router.push("/");
 			} else {
-				if (Array.isArray(result.errors)) {
-					result.errors.forEach((error) => {
-						setAlert(error, "error");
-					});
+				if (result.status_code === 401) {
+					setAlert(
+						ERROR_MESSAGES.unauthorized,
+						"error"
+					);
+					router.push("/");
 				} else {
-					setAlert("Une erreur inconnue s'est produite", "error");
+					if (Array.isArray(result.errors)) {
+						result.errors.forEach((error) => {
+							setAlert(error, "error");
+						});
+					} else {
+						setAlert(ERROR_MESSAGES.default, "error");
+					}
 				}
 			}
 		} catch (error) {
@@ -64,8 +73,7 @@ export default function AdminLayout({
 
 			<div className="flex-1 flex flex-col">
 				<header className="h-16 border-b bg-gray-50 flex items-center justify-between px-6">
-					<h1 className="text-lg font-semibold">
-					</h1>
+					<h1 className="text-lg font-semibold"></h1>
 					<button
 						onClick={handleLogout}
 						type="button"
