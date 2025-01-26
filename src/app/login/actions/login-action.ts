@@ -1,12 +1,16 @@
 import { setAccessToken } from "@/lib/helpers";
 import { fetcher } from "@/lib/requestor";
 
-export async function login(formData: FormData) {
-	const response = await fetcher<{
-		message: string;
-		access_token: string;
-		expires_in: string;
-	}>({
+interface LoginResponseData {
+	access_token: string;
+	expires_in: string;
+	message: string;
+}
+
+export async function login(
+	formData: FormData
+): Promise<{ success: boolean; errors?: string[] }> {
+	const response = await fetcher({
 		url: "/auth/login",
 		method: "POST",
 		body: JSON.stringify({
@@ -14,17 +18,17 @@ export async function login(formData: FormData) {
 			password: formData.get("password"),
 		}),
 		withToken: false,
-		enableLogout: false,
 	});
 
-	if (response.success && response.data) {
-		const data = response.data;
-		const accessToken = data.access_token;
-		if (accessToken) {
-			setAccessToken(accessToken);
+	const { success, data } = response;
+
+	if (success && data) {
+		const { access_token } = data as LoginResponseData;
+		if (access_token) {
+			setAccessToken(access_token);
 		}
 
-		return data;
+		return { success: success };
 	} else {
 		return response;
 	}
