@@ -87,7 +87,7 @@ export default function AdminLayout({
 						onClick={handleLogout}
 						type="button"
 						disabled={pending}
-						className="text-red-500 bg-transparent px-4 py-1.5 rounded-md hover:text-red-600 hover:bg-red-200"
+						className="text-red-500 bg-transparent px-4 py-1.5 border rounded-md hover:text-red-600 hover:bg-red-100 hover:shadow"
 					>
 						{pending ? "Déconnexion..." : "Se déconnecter"}
 					</button>
