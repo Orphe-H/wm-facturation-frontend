@@ -86,14 +86,12 @@ export default function ProductsPage() {
 								</td>
 								<td className="pr-3">{product.price} FCFA</td>
 								<td className="pr-3">
-									<button
-										className="text-blue-500 mr-2"
-										onClick={() =>
-											alert("Éditer le produit")
-										}
+									<Link
+										className="text-blue-500 mr-3"
+										href={`/admin/products/${product.id}/edit`}
 									>
 										Modifier
-									</button>
+									</Link>
 									<button
 										className="text-red-500"
 										onClick={() => handleDelete(product.id)}
