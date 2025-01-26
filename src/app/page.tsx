@@ -2,7 +2,7 @@
 
 import { LoginForm } from "./login/ui/login-form";
 
-export default function Login() {
+export default function LoginPage() {
 	return (
 		<div className="flex min-h-screen">
 			<div className="w-1/2 flex items-center justify-center">

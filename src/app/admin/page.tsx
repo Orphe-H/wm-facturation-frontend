@@ -6,7 +6,7 @@ import { useAlertStore } from "@/stores/alert-store";
 import { useDashboardStore } from "@/stores/dashboard-store";
 import { useEffect } from "react";
 
-export default function Dashboard() {
+export default function DashboardPage() {
 	const { stats, invoices, fetchDashboardData, errors, isLoading } =
 		useDashboardStore();
 	const setAlert = useAlertStore((state) => state.setAlert);

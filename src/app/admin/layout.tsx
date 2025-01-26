@@ -6,6 +6,7 @@ import { logout } from "./actions/logout-action";
 import { useAlertStore } from "@/stores/alert-store";
 import NavLink from "@/components/nav-link";
 import { ERROR_MESSAGES } from "@/lib/messages";
+import Link from "next/link";
 
 export default function AdminLayout({
 	children,
@@ -56,7 +57,7 @@ export default function AdminLayout({
 		<div className="flex h-screen bg-gray-100">
 			<aside className="w-64 bg-gray-50 text-gray-800 flex flex-col shadow-sm border-r">
 				<div className="p-4 text-xl font-bold">
-					Application de facturation
+					<Link href="/admin">Application de facturation</Link>
 				</div>
 				<nav className="mt-2 flex-1 py-4 px-3 space-y-2">
 					<NavLink href="/admin/products">Produits</NavLink>
