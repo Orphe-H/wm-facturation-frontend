@@ -45,7 +45,7 @@ export function LoginForm() {
 			} else {
 				resetForm();
 
-				setAlert("Bienvenue Grand Patron", "success");
+				setAlert("Bienvenue Grand Patron 🙇‍♂️", "success");
 
 				router.push("/admin");
 			}
