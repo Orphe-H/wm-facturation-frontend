@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { fetcher } from "@/lib/requestor";
 
-interface Product {
+export interface Product {
 	id: string | null;
 	name: string;
 	price: number;
@@ -20,8 +20,11 @@ export const useProductStore = create<
 	ProductState & {
 		removeErrors: string[] | string | null;
 		removeSuccess: boolean | null;
+		addErrors: string[] | string | null;
+		addSuccess: boolean | null;
 	}
 >((set, get) => ({
+	product: null,
 	products: [],
 	fetchProducts: async () => {
 		const response = await fetcher({ url: "/products" });
@@ -31,9 +34,33 @@ export const useProductStore = create<
 			set({ products: data as Product[] });
 		}
 	},
-	addProduct: (
-		product // send store request
-	) => set((state) => ({ products: [...state.products, product] })),
+	addErrors: null,
+	addSuccess: null,
+	addProduct: async (product) => {
+		set({ addErrors: null, addSuccess: null });
+
+		const response = await fetcher({
+			url: "/products",
+			method: "POST",
+			body: JSON.stringify(product),
+		});
+
+		const { success } = response;
+
+		if (success) {
+			set({
+				addSuccess: true,
+			});
+		} else {
+			set({
+				addSuccess: false,
+				addErrors: response.errors,
+			});
+		}
+
+		setTimeout(() => set({ addErrors: null, addSuccess: null }), 1000);
+
+	},
 	updateProduct: (
 		product // send update request
 	) =>
@@ -66,5 +93,7 @@ export const useProductStore = create<
 				removeErrors: response.errors,
 			});
 		}
+
+		setTimeout(() => set({ removeErrors: null, removeSuccess: null }), 1000);
 	},
 }));

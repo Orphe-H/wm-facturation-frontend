@@ -48,6 +48,7 @@ export function LoginForm() {
 
 			router.push("/admin");
 		}
+		setPending(false);
 	};
 
 	return (

@@ -44,7 +44,7 @@ export default function ProductsPage() {
 		if (removeSuccess === true) {
 			setAlert("Le produit a été supprimé.", "success");
 		}
-	}, [removeSuccess, removeErrors, setAlert]);
+	}, [removeSuccess, setAlert]);
 
 	useEffect(() => {
 		if (removeErrors) {
