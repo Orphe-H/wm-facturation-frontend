@@ -11,7 +11,6 @@ export function LoginForm() {
 	});
 	const [pending, setPending] = useState(false);
 	const [errors, setErrors] = useState<string | string[]>([]);
-
 	const router = useRouter();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

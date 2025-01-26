@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { GlobalAlert } from "@/components/global-alert";
 
 // const geistSans = Geist({
 // 	variable: "--font-geist-sans",
@@ -30,6 +31,8 @@ export default function RootLayout({
 				// className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<Toaster richColors closeButton position="top-right" />
+
+				<GlobalAlert />
 
 				{children}
 			</body>

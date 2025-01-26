@@ -1,9 +1,7 @@
-export async function login(formData: FormData) {
-	const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+import { getApiUrl, setAccessToken } from "@/lib/helpers";
 
-	if (!apiUrl) {
-		throw new Error("NEXT_PUBLIC_API_URL is not defined in .env");
-	}
+export async function login(formData: FormData) {
+	const apiUrl = getApiUrl();
 
 	try {
 		const response = await fetch(`${apiUrl}/auth/login`, {
@@ -29,8 +27,7 @@ export async function login(formData: FormData) {
 		const accessToken = jsonData.access_token;
 
 		if (accessToken) {
-			localStorage.setItem("access_token", accessToken);
-			document.cookie = `access_token=${accessToken}; path=/; Secure; SameSite=Strict`;
+			setAccessToken(accessToken);
 		}
 
 		return jsonData;
