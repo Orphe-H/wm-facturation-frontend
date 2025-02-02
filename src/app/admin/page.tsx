@@ -1,6 +1,6 @@
 "use client";
 
-import { formatDate, getStatusLabel } from "@/lib/helpers";
+import { formatDateTime, getStatusLabel } from "@/lib/helpers";
 import { ERROR_MESSAGES } from "@/lib/consts";
 import { useAlertStore } from "@/stores/alert-store";
 import { useDashboardStore } from "@/stores/dashboard-store";
@@ -117,10 +117,10 @@ export default function DashboardPage() {
 												{invoice.client?.name}
 											</td>
 											<td className="pr-3">
-												{formatDate(invoice.created_at)}
+												{formatDateTime(invoice.created_at)}
 											</td>
 											<td className="pr-3">
-												{formatDate(invoice.paid_at)}
+												{formatDateTime(invoice.paid_at)}
 											</td>
 										</tr>
 									))

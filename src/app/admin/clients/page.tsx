@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
-import { useProductStore } from "@/stores/product-store";
-import Swal from "sweetalert2";
-import { useAlertStore } from "@/stores/alert-store";
-import Link from "next/link";
 import { formatDateTime } from "@/lib/helpers";
+import { useAlertStore } from "@/stores/alert-store";
+import { useClientStore } from "@/stores/client-store";
+import Link from "next/link";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 
-export default function ProductsPage() {
-	const { products, fetchProducts, removeProduct, notification } =
-		useProductStore();
+export default function ClientsPage() {
+	const { clients, fetchClients, removeClient, notification } =
+		useClientStore();
 	const setAlert = useAlertStore((state) => state.setAlert);
 
 	useEffect(() => {
-		fetchProducts();
-	}, [fetchProducts]);
+		fetchClients();
+	}, [fetchClients]);
 
 	const handleDelete = (id: string | null) => {
 		if (id) {
@@ -29,7 +29,7 @@ export default function ProductsPage() {
 				cancelButtonColor: "#3085d6",
 			}).then((result) => {
 				if (result.isConfirmed) {
-					removeProduct(id);
+					removeClient(id);
 				}
 			});
 		}
@@ -47,7 +47,7 @@ export default function ProductsPage() {
 			<div className="flex justify-end">
 				<Link
 					className="px-4 py-1 text-blue-500 rounded-md bg-blue-100 hover:bg-blue-200 border shadow-sm hover:shadow"
-					href="/admin/products/create"
+					href="/admin/clients/create"
 				>
 					Ajouter
 				</Link>
@@ -57,31 +57,39 @@ export default function ProductsPage() {
 					<thead>
 						<tr className="border bg-white text-gray-600 font-medium">
 							<td className="pl-6 py-3 text-start pr-3">Nom</td>
-							<td className="text-start pr-3">Prix</td>
+							<td className="pl-6 py-3 text-start pr-3">Email</td>
+							<td className="text-start pr-3">
+								Adresse de paiement
+							</td>
 							<td className="text-start pr-3">Ajouté le</td>
 							<td className="text-start pr-3">Actions</td>
 						</tr>
 					</thead>
 					<tbody>
-						{products.map((product) => (
-							<tr key={product.id} className="bg-white border">
+						{clients.map((client) => (
+							<tr key={client.id} className="bg-white border">
 								<td className="pl-6 py-4 pr-3">
-									{product.name}
+									{client.name}
 								</td>
-								<td className="pr-3">{product.price} FCFA</td>
+								<td className="pl-6 py-4 pr-3">
+									{client.email}
+								</td>
+								<td className="pl-6 py-4 pr-3">
+									{client.billing_address}
+								</td>
 								<td className="pr-3">
-									{formatDateTime(product.created_at)}
+									{formatDateTime(client.created_at)}
 								</td>
 								<td className="pr-3">
 									<Link
 										className="text-blue-500 mr-3"
-										href={`/admin/products/${product.id}/edit`}
+										href={`/admin/clients/${client.id}/edit`}
 									>
 										Modifier
 									</Link>
 									<button
 										className="text-red-500"
-										onClick={() => handleDelete(product.id)}
+										onClick={() => handleDelete(client.id)}
 									>
 										Supprimer
 									</button>

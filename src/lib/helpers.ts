@@ -59,7 +59,7 @@ export function getStatusLabel(string: string): string {
 	}
 }
 
-export function formatDate(dateString: string | null) {
+export function formatDateTime(dateString: string | null) {
 	if (!dateString) {
 		return "";
 	}
