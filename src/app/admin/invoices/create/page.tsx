@@ -3,7 +3,7 @@
 import { useAlertStore } from "@/stores/alert-store";
 import { useClientStore } from "@/stores/client-store";
 import { Invoice, useInvoiceStore } from "@/stores/invoice-store";
-import { useProductStore } from "@/stores/product-store";
+import { Product, useProductStore } from "@/stores/product-store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -55,7 +55,10 @@ export default function CreateInvoicePage() {
 		}));
 	};
 
-	const calculateTotalAmount = () => {
+	const calculateTotalAmount = (
+		selectedProducts: { [key: string]: number },
+		products: Product[]
+	) => {
 		let total = 0;
 		for (const productId in selectedProducts) {
 			const product = products.find((p) => p.id === productId);
@@ -63,15 +66,16 @@ export default function CreateInvoicePage() {
 				total += product.price * selectedProducts[productId];
 			}
 		}
-		setInvoice((prev) => ({
-			...prev,
-			amount: total,
-		}));
+		return total;
 	};
 
 	useEffect(() => {
-		calculateTotalAmount();
-	}, [selectedProducts]);
+		const totalAmount = calculateTotalAmount(selectedProducts, products);
+		setInvoice((prev) => ({
+			...prev,
+			amount: totalAmount,
+		}));
+	}, [selectedProducts, products]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -90,14 +94,14 @@ export default function CreateInvoicePage() {
 			})
 		);
 		const invoiceData: Invoice = {
-			id: null, 
-			reference: "", 
-			status: null, 
+			id: null,
+			reference: "",
+			status: null,
 			amount: invoice.amount,
 			client_id: invoice.client_id,
 			client: null,
 			products: invoiceProducts,
-			created_at: null, 
+			created_at: null,
 			paid_at: null,
 		};
 
