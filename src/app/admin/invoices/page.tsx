@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/button";
 import { formatDateTime, getStatusLabel } from "@/lib/helpers";
 import { useAlertStore } from "@/stores/alert-store";
 import { useInvoiceStore } from "@/stores/invoice-store";
@@ -14,6 +15,7 @@ export default function InvoicesPage() {
 		fetchInvoices,
 		payInvoice,
 		generateInvoice,
+		generationPending,
 	} = useInvoiceStore();
 	const setAlert = useAlertStore((state) => state.setAlert);
 
@@ -51,6 +53,15 @@ export default function InvoicesPage() {
 			setAlert(notification.message, notification.type);
 		}
 	}, [notification, setAlert]);
+
+	useEffect(() => {
+		if (generationPending === true) {
+			setAlert(
+				"Génération de facture en cours, veuillez patienter.",
+				"success"
+			);
+		}
+	}, [generationPending, setAlert]);
 
 	return (
 		<div>
@@ -105,25 +116,23 @@ export default function InvoicesPage() {
 								</td>
 								<td className="pr-3">
 									{invoice.status !== "paid" && (
-										<button
-											className="text-green-500 mr-3"
+										<Button
+											text="Payer"
 											onClick={() =>
 												handlePay(invoice.id)
 											}
-										>
-											Payer
-										</button>
+											color="success"
+										/>
 									)}
 
 									{invoice.status == "paid" && (
-										<button
-											className="text-blue-500 mr-3"
+										<Button
+											text="Générer facture"
 											onClick={() =>
 												handleGenerate(invoice.id)
 											}
-										>
-											Générer facture
-										</button>
+											color="primary"
+										/>
 									)}
 								</td>
 							</tr>

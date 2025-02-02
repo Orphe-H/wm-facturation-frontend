@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/button";
 import { formatDateTime } from "@/lib/helpers";
 import { useAlertStore } from "@/stores/alert-store";
 import { useClientStore } from "@/stores/client-store";
@@ -82,17 +83,16 @@ export default function ClientsPage() {
 								</td>
 								<td className="pr-3">
 									<Link
-										className="text-blue-500 mr-3"
+										className="px-4 py-2 text-sm font-medium rounded-md focus:outline-none text-white bg-blue-500 hover:bg-blue-600 mr-3"
 										href={`/admin/clients/${client.id}/edit`}
 									>
 										Modifier
 									</Link>
-									<button
-										className="text-red-500"
+									<Button
+										text="Supprimer"
 										onClick={() => handleDelete(client.id)}
-									>
-										Supprimer
-									</button>
+										color="danger"
+									/>
 								</td>
 							</tr>
 						))}

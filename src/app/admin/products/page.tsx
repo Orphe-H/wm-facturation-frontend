@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { useAlertStore } from "@/stores/alert-store";
 import Link from "next/link";
 import { formatDateTime } from "@/lib/helpers";
+import Button from "@/components/button";
 
 export default function ProductsPage() {
 	const { products, fetchProducts, removeProduct, notification } =
@@ -74,17 +75,16 @@ export default function ProductsPage() {
 								</td>
 								<td className="pr-3">
 									<Link
-										className="text-blue-500 mr-3"
+										className="px-4 py-2 text-sm font-medium rounded-md focus:outline-none text-white bg-blue-500 hover:bg-blue-600 mr-3"
 										href={`/admin/products/${product.id}/edit`}
 									>
 										Modifier
 									</Link>
-									<button
-										className="text-red-500"
+									<Button
+										text="Supprimer"
 										onClick={() => handleDelete(product.id)}
-									>
-										Supprimer
-									</button>
+										color="danger"
+									/>
 								</td>
 							</tr>
 						))}

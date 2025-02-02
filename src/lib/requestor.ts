@@ -4,10 +4,16 @@ import { HTTP_METHOD } from "./enums";
 
 interface FetcherOptions {
 	url: string;
-	method?:  HTTP_METHOD.GET | HTTP_METHOD.POST | HTTP_METHOD.PUT | HTTP_METHOD.PATCH | HTTP_METHOD.DELETE;
+	method?:
+		| HTTP_METHOD.GET
+		| HTTP_METHOD.POST
+		| HTTP_METHOD.PUT
+		| HTTP_METHOD.PATCH
+		| HTTP_METHOD.DELETE;
 	body?: BodyInit | null;
 	withToken?: boolean;
 	enableLogout?: boolean;
+	customAcceptHeader?: string | null;
 }
 
 export const fetcher = async <T>({
@@ -16,10 +22,11 @@ export const fetcher = async <T>({
 	body,
 	withToken = true,
 	enableLogout = true,
+	customAcceptHeader = null,
 }: FetcherOptions): Promise<{
 	success: boolean;
 	status_code: number;
-	data?: T;
+	data?: T | Blob;
 	errors?: string[];
 }> => {
 	const apiUrl = getApiUrl();
@@ -39,6 +46,10 @@ export const fetcher = async <T>({
 				errors: [ERROR_MESSAGES.unauthorized],
 			};
 		}
+	}
+
+	if (customAcceptHeader) {
+		headers.Accept = customAcceptHeader;
 	}
 
 	try {
@@ -65,6 +76,15 @@ export const fetcher = async <T>({
 				success: false,
 				status_code: statusCode,
 				errors: errorData.message || [ERROR_MESSAGES.default],
+			};
+		}
+
+		if (response.headers.get("Content-Type") === "application/pdf") {
+			const blob = await response.blob();
+			return {
+				success: true,
+				status_code: statusCode,
+				data: blob,
 			};
 		}
 

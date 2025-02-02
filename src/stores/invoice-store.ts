@@ -25,13 +25,14 @@ interface InvoiceState {
 	invoices: Invoice[];
 	clients: Client[];
 	products: Product[];
-	generatedFile: null;
+	generatedFile: string | null;
 	fetchInvoices: () => Promise<void>;
 	fetchInvoice: (id: string) => Promise<void>;
 	addInvoice: (invoice: Invoice) => void;
 	payInvoice: (id: string) => void;
 	generateInvoice: (id: string) => void;
 	notification: { message: string; type: "success" | "error" } | null;
+	generationPending: boolean;
 }
 
 export const useInvoiceStore = create<
@@ -45,6 +46,7 @@ export const useInvoiceStore = create<
 	clients: [],
 	products: [],
 	generatedFile: null,
+	generationPending: false,
 	fetchInvoices: async () => {
 		const response = await fetcher({ url: "/invoices" });
 
@@ -116,15 +118,37 @@ export const useInvoiceStore = create<
 		setTimeout(() => set({ notification: null }), 2000);
 	},
 	generateInvoice: async (id: string) => {
+		set({ generatedFile: null, generationPending: true });
+		setTimeout(() => set({ generationPending: false }), 500);
+
 		const response = await fetcher({
 			url: `/invoices/${id}/generate-file`,
+			method: HTTP_METHOD.GET,
+			customAcceptHeader: "application/pdf",
 		});
 
 		if (response.success && response.data) {
-			console.log(response.data);
+			const blob = new Blob([response.data], { type: "application/pdf" });
+			const url = window.URL.createObjectURL(blob);
 
-			// TODO: set generated file
-			set({ generatedFile: null });
+			const link = document.createElement("a");
+			link.href = url;
+			link.setAttribute("download", `invoice_${id}.pdf`);
+			document.body.appendChild(link);
+			link.click();
+
+			document.body.removeChild(link);
+			window.URL.revokeObjectURL(url);
+
+			set({ generatedFile: url });
+		} else {
+			set({
+				notification: {
+					message:
+						response.errors?.join(", ") || ERROR_MESSAGES.default,
+					type: "error",
+				},
+			});
 		}
 	},
 }));
