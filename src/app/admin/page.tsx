@@ -52,7 +52,7 @@ export default function DashboardPage() {
 						<div className="text-sm">Total des ventes payés</div>
 						<div className="space-x-1">
 							<span className="text-3xl font-medium">
-								{stats.total_pending_sell}
+								{stats.total_paid_sell}
 							</span>
 							<span>FCFA</span>
 						</div>
@@ -63,7 +63,7 @@ export default function DashboardPage() {
 						</div>
 						<div className="space-x-1">
 							<span className="text-3xl font-medium">
-								{stats.total_paid_sell}
+								{stats.total_pending_sell}
 							</span>
 							<span>FCFA</span>
 						</div>
