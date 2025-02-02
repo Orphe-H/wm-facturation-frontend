@@ -25,8 +25,6 @@ export const useProductStore = create<
 		removeSuccess: boolean | null;
 		addErrors: string[] | string | null;
 		addSuccess: boolean | null;
-		updateErrors: string[] | string | null;
-		updateSuccess: boolean | null;
 		notification: { message: string; type: "success" | "error" } | null;
 	}
 >((set, get) => ({
@@ -77,8 +75,6 @@ export const useProductStore = create<
 
 		setTimeout(() => set({ addErrors: null, addSuccess: null }), 2000);
 	},
-	updateErrors: null,
-	updateSuccess: null,
 	updateProduct: async (id, product) => {
 		const response = await fetcher({
 			url: `/products/${id}`,
