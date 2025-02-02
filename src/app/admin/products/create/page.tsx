@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 export default function CreateProductPage() {
 	const router = useRouter();
 	const setAlert = useAlertStore((state) => state.setAlert);
+	const [pending, setPending] = useState(false);
+	const { addProduct, notification } = useProductStore();
 
 	const [product, setProduct] = useState<Product>({
 		id: null,
@@ -16,8 +18,6 @@ export default function CreateProductPage() {
 		price: 1,
 		created_at: null,
 	});
-
-	const [pending, setPending] = useState(false);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -35,8 +35,6 @@ export default function CreateProductPage() {
 			created_at: null,
 		});
 	};
-
-	const { addProduct, notification } = useProductStore();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
