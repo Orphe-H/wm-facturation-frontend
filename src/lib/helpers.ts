@@ -47,7 +47,10 @@ export function toastAlert({ message, type }: AlertProps) {
 	}
 }
 
-export function getStatusLabel(string: string): string {
+export function getStatusLabel(string: string | null): string {
+	if (!string) {
+		return "";
+	}
 	if (string === "paid") {
 		return "Payé";
 	} else if (string === "pending") {

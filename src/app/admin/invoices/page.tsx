@@ -13,7 +13,6 @@ export default function InvoicesPage() {
 		invoices,
 		fetchInvoices,
 		payInvoice,
-		removeInvoice,
 		generateInvoice,
 	} = useInvoiceStore();
 	const setAlert = useAlertStore((state) => state.setAlert);
@@ -21,25 +20,6 @@ export default function InvoicesPage() {
 	useEffect(() => {
 		fetchInvoices();
 	}, [fetchInvoices]);
-
-	const handleDelete = (id: string | null) => {
-		if (id) {
-			Swal.fire({
-				title: "Êtes-vous sûr ?",
-				text: "Vous ne pourrez pas annuler cette action !",
-				icon: "warning",
-				confirmButtonColor: "#d33",
-				confirmButtonText: "Oui, supprimer !",
-				showCancelButton: true,
-				cancelButtonText: "Annuler",
-				cancelButtonColor: "#3085d6",
-			}).then((result) => {
-				if (result.isConfirmed) {
-					removeInvoice(id);
-				}
-			});
-		}
-	};
 
 	const handlePay = (id: string | null) => {
 		if (id) {
@@ -141,17 +121,6 @@ export default function InvoicesPage() {
 											}
 										>
 											Payer
-										</button>
-									)}
-
-									{invoice.status !== "paid" && (
-										<button
-											className="text-red-500"
-											onClick={() =>
-												handleDelete(invoice.id)
-											}
-										>
-											Supprimer
 										</button>
 									)}
 

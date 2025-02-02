@@ -8,12 +8,14 @@ import { Product } from "./product-store";
 export interface Invoice {
 	id: string | null;
 	reference: string;
-	status: string;
+	status: string | null;
 	amount: number;
+	client_id: string | null;
 	client: {
 		id: string;
 		name: string;
 	} | null;
+	products: string[],
 	created_at: string | null;
 	paid_at: string | null;
 }
@@ -67,8 +69,8 @@ export const useInvoiceStore = create<
 
 		if (response.success && response.data) {
 			set({
-				clients: response.data as Client[],
-				products: response.data as Product[],
+				clients: response.data.clients as Client[],
+				products: response.data.products as Product[],
 			});
 		}
 	},
