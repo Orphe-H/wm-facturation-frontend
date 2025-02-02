@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { fetcher } from "@/lib/requestor";
+import { ERROR_MESSAGES } from "@/lib/messages";
 
 export interface Product {
 	id: string | null;
@@ -21,8 +22,6 @@ interface ProductState {
 
 export const useProductStore = create<
 	ProductState & {
-		removeErrors: string[] | string | null;
-		removeSuccess: boolean | null;
 		notification: { message: string; type: "success" | "error" } | null;
 	}
 >((set, get) => ({
@@ -65,7 +64,7 @@ export const useProductStore = create<
 		} else {
 			set({
 				notification: {
-					message: response.errors?.join(", ") || "Erreur inconnue",
+					message: response.errors?.join(", ") || ERROR_MESSAGES.default,
 					type: "error",
 				},
 			});
@@ -91,7 +90,7 @@ export const useProductStore = create<
 		} else {
 			set({
 				notification: {
-					message: response.errors?.join(", ") || "Erreur inconnue",
+					message: response.errors?.join(", ") || ERROR_MESSAGES.default,
 					type: "error",
 				},
 			});
@@ -99,34 +98,30 @@ export const useProductStore = create<
 
 		setTimeout(() => set({ notification: null }), 2000);
 	},
-	removeErrors: null,
-	removeSuccess: null,
 	removeProduct: async (id: string) => {
-		set({ removeErrors: null, removeSuccess: null });
-
 		const response = await fetcher({
 			url: `/products/${id}`,
 			method: "DELETE",
 		});
 
-		const { success } = response;
-
-		if (success) {
+		if (response.success) {
 			set({
-				removeSuccess: true,
+				notification: {
+					message: "Produit supprimé avec succès.",
+					type: "success",
+				},
 			});
 
 			await get().fetchProducts();
 		} else {
 			set({
-				removeSuccess: false,
-				removeErrors: response.errors,
+				notification: {
+					message: response.errors?.join(", ") || ERROR_MESSAGES.default,
+					type: "error",
+				},
 			});
 		}
 
-		setTimeout(
-			() => set({ removeErrors: null, removeSuccess: null }),
-			2000
-		);
+		setTimeout(() => set({ notification: null }), 2000);
 	},
 }));

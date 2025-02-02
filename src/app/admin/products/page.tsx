@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useProductStore } from "@/stores/product-store";
 import Swal from "sweetalert2";
 import { useAlertStore } from "@/stores/alert-store";
-import { ERROR_MESSAGES } from "@/lib/messages";
 import Link from "next/link";
 
 export default function ProductsPage() {
@@ -12,8 +11,7 @@ export default function ProductsPage() {
 		products,
 		fetchProducts,
 		removeProduct,
-		removeErrors,
-		removeSuccess,
+		notification,
 	} = useProductStore();
 	const setAlert = useAlertStore((state) => state.setAlert);
 
@@ -41,22 +39,10 @@ export default function ProductsPage() {
 	};
 
 	useEffect(() => {
-		if (removeSuccess === true) {
-			setAlert("Le produit a été supprimé.", "success");
+		if (notification) {
+			setAlert(notification.message, notification.type);
 		}
-	}, [removeSuccess, setAlert]);
-
-	useEffect(() => {
-		if (removeErrors) {
-			if (Array.isArray(removeErrors)) {
-				removeErrors.forEach((error) => {
-					setAlert(error, "error");
-				});
-			} else {
-				setAlert(removeErrors || ERROR_MESSAGES.default, "error");
-			}
-		}
-	}, [removeErrors, setAlert]);
+	}, [notification, setAlert]);
 
 	return (
 		<div>
