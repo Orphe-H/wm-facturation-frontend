@@ -12,35 +12,30 @@ export default function EditProductPage({
 	params: Promise<{ id: string }>;
 }) {
 	const { id } = use(params);
-	const { product, fetchProduct, updateProduct, addErrors, addSuccess } =
+	const { product, fetchProduct, updateProduct, notification } =
 		useProductStore();
 	const setAlert = useAlertStore((state) => state.setAlert);
 	const router = useRouter();
 
-	const [formData, setFormData] = useState<Partial<Product>>({
+	const [formData, setFormData] = useState<Product>({
+		id: null,
 		name: "",
 		price: 1,
+		created_at: null,
 	});
 
 	const [pending, setPending] = useState(false);
-	const [errors, setErrors] = useState<string | string[]>([]);
 
-	// Fetch product data when the page loads
 	useEffect(() => {
 		fetchProduct(id);
 	}, [fetchProduct, id]);
 
-	// Update formData when product is fetched
 	useEffect(() => {
 		if (product) {
-			setFormData({
-				name: product.name,
-				price: product.price,
-			});
+			setFormData(product);
 		}
 	}, [product]);
 
-	// Handle changes in the form inputs
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({
@@ -49,31 +44,21 @@ export default function EditProductPage({
 		}));
 	};
 
-	// Handle form submission
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setPending(true);
-
 		await updateProduct(id, formData);
-
 		setPending(false);
 	};
 
-	// Handle success and errors
 	useEffect(() => {
-		if (addSuccess) {
-			setAlert("Produit mis à jour avec succès.", "success");
-			router.push("/admin/products");
+		if (notification) {
+			setAlert(notification.message, notification.type);
+			if (notification.type === "success") {
+				router.push("/admin/products");
+			}
 		}
-	}, [addSuccess, setAlert, router]);
-
-	useEffect(() => {
-		if (addErrors) {
-			setErrors(addErrors);
-		} else {
-			setErrors([]);
-		}
-	}, [addErrors]);
+	}, [notification, setAlert, router]);
 
 	return (
 		<div>
@@ -126,19 +111,6 @@ export default function EditProductPage({
 									className="w-full mt-1 py-2 px-2.5 bg-transparent ring-1 ring-gray-300 border-0 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 hover:ring-blue-500"
 								/>
 							</div>
-
-							{errors.length > 0 && (
-								<div className="mt-4 text-red-500 space-y-2">
-									{(Array.isArray(errors)
-										? errors
-										: [errors]
-									).map((error, index) => (
-										<p key={index} className="text-sm">
-											{error}
-										</p>
-									))}
-								</div>
-							)}
 
 							<div className="mt-8 flex justify-end">
 								<button

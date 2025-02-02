@@ -9,6 +9,13 @@ interface FetcherOptions {
 	enableLogout?: boolean;
 }
 
+interface FetcherResponse<T> {
+	success: boolean;
+	status_code: number;
+	data?: T;
+	errors?: string[];
+}
+
 export const fetcher = async <T>({
 	url,
 	method = "GET",

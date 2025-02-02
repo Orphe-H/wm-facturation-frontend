@@ -16,6 +16,7 @@ interface ProductState {
 	addProduct: (product: Product) => void;
 	updateProduct: (id: string, product: Product) => void;
 	removeProduct: (id: string) => void;
+	notification: { message: string; type: "success" | "error" } | null;
 }
 
 export const useProductStore = create<
@@ -26,8 +27,10 @@ export const useProductStore = create<
 		addSuccess: boolean | null;
 		updateErrors: string[] | string | null;
 		updateSuccess: boolean | null;
+		notification: { message: string; type: "success" | "error" } | null;
 	}
 >((set, get) => ({
+	notification: null,
 	product: null,
 	products: [],
 	fetchProducts: async () => {
@@ -72,35 +75,35 @@ export const useProductStore = create<
 			});
 		}
 
-		setTimeout(() => set({ addErrors: null, addSuccess: null }), 1000);
+		setTimeout(() => set({ addErrors: null, addSuccess: null }), 2000);
 	},
 	updateErrors: null,
 	updateSuccess: null,
-	updateProduct: async (id: string, product: Partial<Product>) => {
+	updateProduct: async (id, product) => {
 		const response = await fetcher({
 			url: `/products/${id}`,
 			method: "PATCH",
 			body: JSON.stringify(product),
 		});
 
-		const { success } = response;
-
-		if (success) {
+		if (response.success) {
 			set({
 				product: null,
-				updateSuccess: true,
+				notification: {
+					message: "Produit mis à jour avec succès",
+					type: "success",
+				},
 			});
 		} else {
 			set({
-				updateSuccess: false,
-				updateErrors: response.errors,
+				notification: {
+					message: response.errors?.join(", ") || "Erreur inconnue",
+					type: "error",
+				},
 			});
 		}
 
-		setTimeout(
-			() => set({ updateErrors: null, updateSuccess: null }),
-			1000
-		);
+		setTimeout(() => set({ notification: null }), 2000);
 	},
 	removeErrors: null,
 	removeSuccess: null,
@@ -129,7 +132,7 @@ export const useProductStore = create<
 
 		setTimeout(
 			() => set({ removeErrors: null, removeSuccess: null }),
-			1000
+			2000
 		);
 	},
 }));
