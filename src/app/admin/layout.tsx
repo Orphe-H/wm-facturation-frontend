@@ -5,7 +5,7 @@ import { useState } from "react";
 import { logout } from "./actions/logout-action";
 import { useAlertStore } from "@/stores/alert-store";
 import NavLink from "@/components/nav-link";
-import { ERROR_MESSAGES } from "@/lib/messages";
+import { ERROR_MESSAGES } from "@/lib/consts";
 import Link from "next/link";
 
 export default function AdminLayout({

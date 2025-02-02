@@ -1,3 +1,4 @@
+import { HTTP_METHOD } from "@/lib/enums";
 import { removeAccessToken } from "@/lib/helpers";
 import { fetcher } from "@/lib/requestor";
 
@@ -9,7 +10,7 @@ export async function logout(): Promise<{
 
 	const response = await fetcher({
 		url: "/auth/logout",
-		method: "POST",
+		method: HTTP_METHOD.POST,
 	});
 
 	if (response.success) {

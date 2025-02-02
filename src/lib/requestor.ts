@@ -1,9 +1,10 @@
 import { getAccessToken, getApiUrl, removeAccessToken } from "./helpers";
-import { ERROR_MESSAGES } from "./messages";
+import { ERROR_MESSAGES } from "./consts";
+import { HTTP_METHOD } from "./enums";
 
 interface FetcherOptions {
 	url: string;
-	method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+	method?:  HTTP_METHOD.GET | HTTP_METHOD.POST | HTTP_METHOD.PUT | HTTP_METHOD.PATCH | HTTP_METHOD.DELETE;
 	body?: BodyInit | null;
 	withToken?: boolean;
 	enableLogout?: boolean;
@@ -11,7 +12,7 @@ interface FetcherOptions {
 
 export const fetcher = async <T>({
 	url,
-	method = "GET",
+	method = HTTP_METHOD.GET,
 	body,
 	withToken = true,
 	enableLogout = true,

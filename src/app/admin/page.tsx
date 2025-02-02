@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDate, getStatusLabel } from "@/lib/helpers";
-import { ERROR_MESSAGES } from "@/lib/messages";
+import { ERROR_MESSAGES } from "@/lib/consts";
 import { useAlertStore } from "@/stores/alert-store";
 import { useDashboardStore } from "@/stores/dashboard-store";
 import { useEffect } from "react";

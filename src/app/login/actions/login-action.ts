@@ -1,3 +1,4 @@
+import { HTTP_METHOD } from "@/lib/enums";
 import { setAccessToken } from "@/lib/helpers";
 import { fetcher } from "@/lib/requestor";
 
@@ -12,7 +13,7 @@ export async function login(
 ): Promise<{ success: boolean; errors?: string[] }> {
 	const response = await fetcher({
 		url: "/auth/login",
-		method: "POST",
+		method: HTTP_METHOD.POST,
 		body: JSON.stringify({
 			email: formData.get("email"),
 			password: formData.get("password"),

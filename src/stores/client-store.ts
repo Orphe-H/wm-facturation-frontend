@@ -1,62 +1,63 @@
-import { create } from "zustand";
-import { fetcher } from "@/lib/requestor";
 import { ERROR_MESSAGES } from "@/lib/consts";
 import { HTTP_METHOD } from "@/lib/enums";
+import { fetcher } from "@/lib/requestor";
+import { create } from "zustand";
 
-export interface Product {
+export interface Client {
 	id: string | null;
 	name: string;
-	price: number;
+	email: string;
+	billing_address: string;
 	created_at: string | null;
 }
 
-interface ProductState {
-	product: Product | null;
-	products: Product[];
-	fetchProducts: () => Promise<void>;
-	fetchProduct: (id: string) => Promise<void>;
-	addProduct: (product: Product) => void;
-	updateProduct: (id: string, product: Product) => void;
-	removeProduct: (id: string) => void;
+interface ClientState {
+	client: Client | null;
+	clients: Client[];
+	fetchClients: () => Promise<void>;
+	fetchClient: (id: string) => Promise<void>;
+	addClient: (client: Client) => void;
+	updateClient: (id: string, client: Client) => void;
+	removeClient: (id: string) => void;
 	notification: { message: string; type: "success" | "error" } | null;
 }
 
-export const useProductStore = create<
-	ProductState & {
+export const useClientStore = create<
+	ClientState & {
 		notification: { message: string; type: "success" | "error" } | null;
 	}
 >((set, get) => ({
 	notification: null,
-	product: null,
-	products: [],
-	fetchProducts: async () => {
-		const response = await fetcher({ url: "/products" });
+	client: null,
+	clients: [],
+	fetchClients: async () => {
+		const response = await fetcher({ url: "/clients" });
 
 		if (response.success && response.data) {
-			set({ products: response.data as Product[] });
+			set({ clients: response.data as Client[] });
 		}
 	},
-	fetchProduct: async (id: string) => {
+	fetchClient: async (id: string) => {
 		const response = await fetcher({
-			url: `/products/${id}`,
+			url: `/clients/${id}`,
 		});
 
 		if (response.success && response.data) {
-			set({ product: response.data as Product });
+			set({ client: response.data as Client });
 		}
 	},
-	addProduct: async (product) => {
+	addClient: async (client) => {
 		const response = await fetcher({
-			url: "/products",
+			url: "/clients",
 			method: HTTP_METHOD.POST,
-			body: JSON.stringify(product),
+			body: JSON.stringify(client),
 		});
 
 		if (response.success) {
 			set({
-				product: null,
+				client: null,
 				notification: {
-					message: "Produit créé avec succès.",
+					message: "Client créé avec succès.",
 					type: "success",
 				},
 			});
@@ -72,18 +73,18 @@ export const useProductStore = create<
 
 		setTimeout(() => set({ notification: null }), 2000);
 	},
-	updateProduct: async (id, product) => {
+	updateClient: async (id: string, client) => {
 		const response = await fetcher({
-			url: `/products/${id}`,
+			url: `/clients/${id}`,
 			method: HTTP_METHOD.PATCH,
-			body: JSON.stringify(product),
+			body: JSON.stringify(client),
 		});
 
 		if (response.success) {
 			set({
-				product: null,
+				client: null,
 				notification: {
-					message: "Produit mis à jour avec succès",
+					message: "Client mis à jour avec succès",
 					type: "success",
 				},
 			});
@@ -99,21 +100,21 @@ export const useProductStore = create<
 
 		setTimeout(() => set({ notification: null }), 2000);
 	},
-	removeProduct: async (id: string) => {
+	removeClient: async (id: string) => {
 		const response = await fetcher({
-			url: `/products/${id}`,
+			url: `/clients/${id}`,
 			method: HTTP_METHOD.DELETE,
 		});
 
 		if (response.success) {
 			set({
 				notification: {
-					message: "Produit supprimé avec succès.",
+					message: "Client supprimé avec succès.",
 					type: "success",
 				},
 			});
 
-			await get().fetchProducts();
+			await get().fetchClients();
 		} else {
 			set({
 				notification: {
