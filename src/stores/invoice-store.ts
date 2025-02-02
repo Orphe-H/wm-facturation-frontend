@@ -130,7 +130,11 @@ export const useInvoiceStore = create<
 			customAcceptHeader: "application/pdf",
 		});
 
-		if (response.success && response.data) {
+		if (
+			response.success &&
+			response.data &&
+			response.data instanceof Blob
+		) {
 			const blob = new Blob([response.data], { type: "application/pdf" });
 			const url = window.URL.createObjectURL(blob);
 
