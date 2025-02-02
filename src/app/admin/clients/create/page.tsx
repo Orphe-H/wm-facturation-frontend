@@ -1,19 +1,21 @@
 "use client";
 
 import { useAlertStore } from "@/stores/alert-store";
-import { useProductStore, Product } from "@/stores/product-store";
+import { Client, useClientStore } from "@/stores/client-store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function CreateProductPage() {
+export default function CreateClientPage() {
 	const router = useRouter();
 	const setAlert = useAlertStore((state) => state.setAlert);
+	const { addClient, notification } = useClientStore();
 
-	const [product, setProduct] = useState<Product>({
+	const [client, setClient] = useState<Client>({
 		id: null,
 		name: "",
-		price: 1,
+		email: "",
+		billing_address: "",
 		created_at: null,
 	});
 
@@ -21,28 +23,28 @@ export default function CreateProductPage() {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setProduct((prev) => ({
+		setClient((prev) => ({
 			...prev,
 			[name]: value,
 		}));
 	};
 
 	const resetForm = () => {
-		setProduct({
+		setClient({
 			id: null,
 			name: "",
-			price: 1,
+			email: "",
+			billing_address: "",
 			created_at: null,
 		});
 	};
 
-	const { addProduct, notification } = useProductStore();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setPending(true);
 
-		addProduct(product);
+		addClient(client);
 
 		setPending(false);
 	};
@@ -51,7 +53,7 @@ export default function CreateProductPage() {
 		if (notification) {
 			if (notification.type === "success") {
 				resetForm();
-				router.push("/admin/products");
+				router.push("/admin/clients");
 			} else {
 				setAlert(notification.message, notification.type);
 			}
@@ -60,12 +62,12 @@ export default function CreateProductPage() {
 
 	return (
 		<div>
-			<h2 className="font-medium text-lg">Ajouter un produit</h2>
+			<h2 className="font-medium text-lg">Ajouter un client</h2>
 
 			<div className="mt-4">
 				<Link
 					className="px-4 py-1 rounded-md bg-gray-700 hover:bg-gray-800 text-white"
-					href="/admin/products"
+					href="/admin/clients"
 				>
 					Retour à la liste
 				</Link>
@@ -86,7 +88,24 @@ export default function CreateProductPage() {
 									type="text"
 									required
 									name="name"
-									value={product.name}
+									value={client.name}
+									onChange={handleChange}
+									className="w-full mt-1 py-2 px-2.5 bg-transparent ring-1 ring-gray-300 border-0 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 hover:ring-blue-500"
+								/>
+							</div>
+							
+							<div className="mt-4">
+								<label
+									htmlFor="email"
+									className="block font-medium text-gray-700"
+								>
+									Email
+								</label>
+								<input
+									type="text"
+									required
+									name="email"
+									value={client.email}
 									onChange={handleChange}
 									className="w-full mt-1 py-2 px-2.5 bg-transparent ring-1 ring-gray-300 border-0 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 hover:ring-blue-500"
 								/>
@@ -94,17 +113,16 @@ export default function CreateProductPage() {
 
 							<div className="mt-4">
 								<label
-									htmlFor="price"
+									htmlFor="billing_address"
 									className="block font-medium text-gray-700"
 								>
-									Prix
+									Adresse de facturation
 								</label>
 								<input
-									type="number"
-									min={1}
+									type="text"
 									required
-									name="price"
-									value={product.price}
+									name="billing_address"
+									value={client.billing_address}
 									onChange={handleChange}
 									className="w-full mt-1 py-2 px-2.5 bg-transparent ring-1 ring-gray-300 border-0 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 hover:ring-blue-500"
 								/>

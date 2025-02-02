@@ -59,7 +59,7 @@ export default function ClientsPage() {
 							<td className="pl-6 py-3 text-start pr-3">Nom</td>
 							<td className="pl-6 py-3 text-start pr-3">Email</td>
 							<td className="text-start pr-3">
-								Adresse de paiement
+								Adresse de facturation
 							</td>
 							<td className="text-start pr-3">Ajouté le</td>
 							<td className="text-start pr-3">Actions</td>
