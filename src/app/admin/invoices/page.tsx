@@ -105,15 +105,6 @@ export default function InvoicesPage() {
 								</td>
 								<td className="pr-3">
 									{invoice.status !== "paid" && (
-										<Link
-											className="text-blue-500 mr-3"
-											href={`/admin/products/${invoice.id}/edit`}
-										>
-											Modifier
-										</Link>
-									)}
-
-									{invoice.status !== "paid" && (
 										<button
 											className="text-green-500 mr-3"
 											onClick={() =>

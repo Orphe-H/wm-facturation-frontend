@@ -15,7 +15,7 @@ export interface Invoice {
 		id: string;
 		name: string;
 	} | null;
-	products: string[],
+	products: string[];
 	created_at: string | null;
 	paid_at: string | null;
 }
@@ -29,9 +29,6 @@ interface InvoiceState {
 	fetchInvoices: () => Promise<void>;
 	fetchInvoice: (id: string) => Promise<void>;
 	addInvoice: (invoice: Invoice) => void;
-	createInvoice: () => Promise<void>;
-	updateInvoice: (id: string, invoice: Invoice) => void;
-	removeInvoice: (id: string) => void;
 	payInvoice: (id: string) => void;
 	generateInvoice: (id: string) => void;
 	notification: { message: string; type: "success" | "error" } | null;
@@ -64,16 +61,6 @@ export const useInvoiceStore = create<
 			set({ invoice: response.data as Invoice });
 		}
 	},
-	createInvoice: async () => {
-		const response = await fetcher({ url: "/invoices/create" });
-
-		if (response.success && response.data) {
-			set({
-				clients: response.data.clients as Client[],
-				products: response.data.products as Product[],
-			});
-		}
-	},
 	addInvoice: async (invoice) => {
 		const response = await fetcher({
 			url: "/invoices",
@@ -89,60 +76,6 @@ export const useInvoiceStore = create<
 					type: "success",
 				},
 			});
-		} else {
-			set({
-				notification: {
-					message:
-						response.errors?.join(", ") || ERROR_MESSAGES.default,
-					type: "error",
-				},
-			});
-		}
-
-		setTimeout(() => set({ notification: null }), 2000);
-	},
-	updateInvoice: async (id, invoice) => {
-		const response = await fetcher({
-			url: `/invoices/${id}`,
-			method: HTTP_METHOD.PATCH,
-			body: JSON.stringify(invoice),
-		});
-
-		if (response.success) {
-			set({
-				invoice: null,
-				notification: {
-					message: "Facture mise à jour avec succès",
-					type: "success",
-				},
-			});
-		} else {
-			set({
-				notification: {
-					message:
-						response.errors?.join(", ") || ERROR_MESSAGES.default,
-					type: "error",
-				},
-			});
-		}
-
-		setTimeout(() => set({ notification: null }), 2000);
-	},
-	removeInvoice: async (id: string) => {
-		const response = await fetcher({
-			url: `/invoices/${id}`,
-			method: HTTP_METHOD.DELETE,
-		});
-
-		if (response.success) {
-			set({
-				notification: {
-					message: "Facture supprimée avec succès.",
-					type: "success",
-				},
-			});
-
-			await get().fetchInvoices();
 		} else {
 			set({
 				notification: {

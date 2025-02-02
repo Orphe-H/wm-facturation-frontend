@@ -1,7 +1,9 @@
 "use client";
 
 import { useAlertStore } from "@/stores/alert-store";
+import { useClientStore } from "@/stores/client-store";
 import { Invoice, useInvoiceStore } from "@/stores/invoice-store";
+import { useProductStore } from "@/stores/product-store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -9,8 +11,11 @@ import { useEffect, useState } from "react";
 export default function CreateInvoicePage() {
 	const router = useRouter();
 	const setAlert = useAlertStore((state) => state.setAlert);
-	const { addInvoice, notification, createInvoice, products, clients } =
+	const { addInvoice, notification } =
 		useInvoiceStore();
+
+	const { fetchProducts, products } = useProductStore();
+	const { fetchClients, clients} = useClientStore();
 
 	const [pending, setPending] = useState(false);
 	const [invoice, setInvoice] = useState<Invoice>({
@@ -25,14 +30,14 @@ export default function CreateInvoicePage() {
 		paid_at: null,
 	});
 
-	// Stocke les quantités sélectionnées pour chaque produit
 	const [selectedProducts, setSelectedProducts] = useState<{
 		[key: string]: number;
 	}>({});
 
 	useEffect(() => {
-		createInvoice();
-	}, [createInvoice]);
+		fetchProducts();
+		fetchClients();
+	}, [fetchProducts, fetchClients]);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
