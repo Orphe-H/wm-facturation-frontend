@@ -9,10 +9,12 @@ export interface Product {
 }
 
 interface ProductState {
+	product: Product | null;
 	products: Product[];
 	fetchProducts: () => Promise<void>;
+	fetchProduct: (id: string) => Promise<void>;
 	addProduct: (product: Product) => void;
-	updateProduct: (product: Product) => void;
+	updateProduct: (id: string, product: Product) => void;
 	removeProduct: (id: string) => void;
 }
 
@@ -22,6 +24,8 @@ export const useProductStore = create<
 		removeSuccess: boolean | null;
 		addErrors: string[] | string | null;
 		addSuccess: boolean | null;
+		updateErrors: string[] | string | null;
+		updateSuccess: boolean | null;
 	}
 >((set, get) => ({
 	product: null,
@@ -32,6 +36,16 @@ export const useProductStore = create<
 
 		if (success && data) {
 			set({ products: data as Product[] });
+		}
+	},
+	fetchProduct: async (id: string) => {
+		const response = await fetcher({
+			url: `/products/${id}`,
+		});
+		const { success, data } = response;
+
+		if (success && data) {
+			set({ product: data as Product });
 		}
 	},
 	addErrors: null,
@@ -59,16 +73,35 @@ export const useProductStore = create<
 		}
 
 		setTimeout(() => set({ addErrors: null, addSuccess: null }), 1000);
-
 	},
-	updateProduct: (
-		product // send update request
-	) =>
-		set((state) => ({
-			products: state.products.map((p) =>
-				p.id === product.id ? { ...p, ...product } : p
-			),
-		})),
+	updateErrors: null,
+	updateSuccess: null,
+	updateProduct: async (id: string, product: Partial<Product>) => {
+		const response = await fetcher({
+			url: `/products/${id}`,
+			method: "PATCH",
+			body: JSON.stringify(product),
+		});
+
+		const { success } = response;
+
+		if (success) {
+			set({
+				product: null,
+				updateSuccess: true,
+			});
+		} else {
+			set({
+				updateSuccess: false,
+				updateErrors: response.errors,
+			});
+		}
+
+		setTimeout(
+			() => set({ updateErrors: null, updateSuccess: null }),
+			1000
+		);
+	},
 	removeErrors: null,
 	removeSuccess: null,
 	removeProduct: async (id: string) => {
@@ -94,6 +127,9 @@ export const useProductStore = create<
 			});
 		}
 
-		setTimeout(() => set({ removeErrors: null, removeSuccess: null }), 1000);
+		setTimeout(
+			() => set({ removeErrors: null, removeSuccess: null }),
+			1000
+		);
 	},
 }));
