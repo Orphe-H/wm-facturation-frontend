@@ -18,7 +18,6 @@ export default function CreateProductPage() {
 	});
 
 	const [pending, setPending] = useState(false);
-	const [errors, setErrors] = useState<string | string[]>([]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -37,7 +36,7 @@ export default function CreateProductPage() {
 		});
 	};
 
-	const { addProduct, addErrors, addSuccess } = useProductStore();
+	const { addProduct, notification } = useProductStore();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -49,22 +48,15 @@ export default function CreateProductPage() {
 	};
 
 	useEffect(() => {
-		if (addSuccess === true) {
-			resetForm();
+		if (notification) {
+			setAlert(notification.message, notification.type);
 
-			setAlert("Le produit a été créé.", "success");
-
-			router.push("/admin/products");
+			if (notification.type === "success") {
+				resetForm();
+				router.push("/admin/products");
+			}
 		}
-	}, [addSuccess, router, setAlert]);
-
-	useEffect(() => {
-		if (addErrors) {
-			setErrors(addErrors);
-		} else {
-			setErrors([]);
-		}
-	}, [addErrors]);
+	}, [notification, router, setAlert]);
 
 	return (
 		<div>
@@ -117,20 +109,6 @@ export default function CreateProductPage() {
 									className="w-full mt-1 py-2 px-2.5 bg-transparent ring-1 ring-gray-300 border-0 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 hover:ring-blue-500"
 								/>
 							</div>
-
-							{(Array.isArray(errors) ? errors : [errors])
-								.length > 0 && (
-								<div className="mt-4 text-red-500 space-y-2">
-									{(Array.isArray(errors)
-										? errors
-										: [errors]
-									).map((error, index) => (
-										<p key={index} className="text-sm">
-											{error}
-										</p>
-									))}
-								</div>
-							)}
 
 							<div className="mt-8 flex justify-end">
 								<button

@@ -23,8 +23,6 @@ export const useProductStore = create<
 	ProductState & {
 		removeErrors: string[] | string | null;
 		removeSuccess: boolean | null;
-		addErrors: string[] | string | null;
-		addSuccess: boolean | null;
 		notification: { message: string; type: "success" | "error" } | null;
 	}
 >((set, get) => ({
@@ -49,31 +47,31 @@ export const useProductStore = create<
 			set({ product: data as Product });
 		}
 	},
-	addErrors: null,
-	addSuccess: null,
 	addProduct: async (product) => {
-		set({ addErrors: null, addSuccess: null });
-
 		const response = await fetcher({
 			url: "/products",
 			method: "POST",
 			body: JSON.stringify(product),
 		});
 
-		const { success } = response;
-
-		if (success) {
+		if (response.success) {
 			set({
-				addSuccess: true,
+				product: null,
+				notification: {
+					message: "Produit créé avec succès.",
+					type: "success",
+				},
 			});
 		} else {
 			set({
-				addSuccess: false,
-				addErrors: response.errors,
+				notification: {
+					message: response.errors?.join(", ") || "Erreur inconnue",
+					type: "error",
+				},
 			});
 		}
 
-		setTimeout(() => set({ addErrors: null, addSuccess: null }), 2000);
+		setTimeout(() => set({ notification: null }), 2000);
 	},
 	updateProduct: async (id, product) => {
 		const response = await fetcher({
