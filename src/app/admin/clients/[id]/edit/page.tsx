@@ -1,39 +1,40 @@
 "use client";
 
-import { useProductStore, Product } from "@/stores/product-store";
 import { useAlertStore } from "@/stores/alert-store";
+import { Client, useClientStore } from "@/stores/client-store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 
-export default function EditProductPage({
+export default function EditClientPage({
 	params,
 }: {
 	params: Promise<{ id: string }>;
 }) {
 	const { id } = use(params);
-	const { product, fetchProduct, updateProduct, notification } =
-		useProductStore();
+	const { client, fetchClient, updateClient, notification } =
+		useClientStore();
 	const setAlert = useAlertStore((state) => state.setAlert);
 	const router = useRouter();
 	const [pending, setPending] = useState(false);
 
-	const [formData, setFormData] = useState<Product>({
+	const [formData, setFormData] = useState<Client>({
 		id: null,
 		name: "",
-		price: 1,
+		email: "",
+		billing_address: "",
 		created_at: null,
 	});
 
 	useEffect(() => {
-		fetchProduct(id);
-	}, [fetchProduct, id]);
+		fetchClient(id);
+	}, [fetchClient, id]);
 
 	useEffect(() => {
-		if (product) {
-			setFormData(product);
+		if (client) {
+			setFormData(client);
 		}
-	}, [product]);
+	}, [client]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -46,14 +47,14 @@ export default function EditProductPage({
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setPending(true);
-		await updateProduct(id, formData);
+		await updateClient(id, formData);
 		setPending(false);
 	};
 
 	useEffect(() => {
 		if (notification) {
 			if (notification.type === "success") {
-				router.push("/admin/products");
+				router.push("/admin/clients");
 			} else {
 				setAlert(notification.message, notification.type);
 			}
@@ -62,12 +63,12 @@ export default function EditProductPage({
 
 	return (
 		<div>
-			<h2 className="font-medium text-lg">Modifier un produit</h2>
+			<h2 className="font-medium text-lg">Modifier un client</h2>
 
 			<div className="mt-4">
 				<Link
 					className="px-4 py-1 rounded-md bg-gray-700 hover:bg-gray-800 text-white"
-					href="/admin/products"
+					href="/admin/clients"
 				>
 					Retour à la liste
 				</Link>
@@ -96,17 +97,33 @@ export default function EditProductPage({
 
 							<div className="mt-4">
 								<label
-									htmlFor="price"
+									htmlFor="email"
 									className="block font-medium text-gray-700"
 								>
-									Prix
+									Email
 								</label>
 								<input
-									type="number"
-									min={1}
+									type="text"
 									required
-									name="price"
-									value={formData.price}
+									name="email"
+									value={formData.email}
+									onChange={handleChange}
+									className="w-full mt-1 py-2 px-2.5 bg-transparent ring-1 ring-gray-300 border-0 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 hover:ring-blue-500"
+								/>
+							</div>
+
+							<div className="mt-4">
+								<label
+									htmlFor="billing_address"
+									className="block font-medium text-gray-700"
+								>
+									Adresse de facturation
+								</label>
+								<input
+									type="text"
+									required
+									name="billing_address"
+									value={formData.billing_address}
 									onChange={handleChange}
 									className="w-full mt-1 py-2 px-2.5 bg-transparent ring-1 ring-gray-300 border-0 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 hover:ring-blue-500"
 								/>
