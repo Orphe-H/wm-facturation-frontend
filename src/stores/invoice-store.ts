@@ -11,11 +11,14 @@ export interface Invoice {
 	status: string | null;
 	amount: number;
 	client_id: string | null;
-	client: {
-		id: string;
-		name: string;
-	} | null;
-	products: string[];
+	client:
+		| {
+				id: string;
+				name: string;
+		  }
+		| Client
+		| null;
+	products: { product_id: string; quantity: string }[];
 	created_at: string | null;
 	paid_at: string | null;
 }

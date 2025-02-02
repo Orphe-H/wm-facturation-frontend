@@ -11,11 +11,10 @@ import { useEffect, useState } from "react";
 export default function CreateInvoicePage() {
 	const router = useRouter();
 	const setAlert = useAlertStore((state) => state.setAlert);
-	const { addInvoice, notification } =
-		useInvoiceStore();
+	const { addInvoice, notification } = useInvoiceStore();
 
 	const { fetchProducts, products } = useProductStore();
-	const { fetchClients, clients} = useClientStore();
+	const { fetchClients, clients } = useClientStore();
 
 	const [pending, setPending] = useState(false);
 	const [invoice, setInvoice] = useState<Invoice>({
@@ -84,18 +83,22 @@ export default function CreateInvoicePage() {
 			return;
 		}
 
-		// Construction de l'objet `products` attendu
 		const invoiceProducts = Object.entries(selectedProducts).map(
 			([productId, quantity]) => ({
 				product_id: productId,
 				quantity: String(quantity),
 			})
 		);
-
-		const invoiceData = {
-			client_id: invoice.client_id,
+		const invoiceData: Invoice = {
+			id: null, 
+			reference: "", 
+			status: null, 
 			amount: invoice.amount,
+			client_id: invoice.client_id,
+			client: null,
 			products: invoiceProducts,
+			created_at: null, 
+			paid_at: null,
 		};
 
 		setPending(true);
