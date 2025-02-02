@@ -44,7 +44,7 @@ export default function ClientsPage() {
 
 	return (
 		<div>
-			<h2 className="font-medium text-lg">Liste des produits</h2>
+			<h2 className="font-medium text-lg">Liste des clients</h2>
 			<div className="flex justify-end">
 				<Link
 					className="px-4 py-1 text-blue-500 rounded-md bg-blue-100 hover:bg-blue-200 border shadow-sm hover:shadow"
