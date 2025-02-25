@@ -122,6 +122,7 @@ export default function InvoicesPage() {
 												handlePay(invoice.id)
 											}
 											color="success"
+											className="w-36"
 										/>
 									)}
 
@@ -132,6 +133,7 @@ export default function InvoicesPage() {
 												handleGenerate(invoice.id)
 											}
 											color="primary"
+											className="w-36"
 										/>
 									)}
 								</td>
