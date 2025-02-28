@@ -1,0 +1,14 @@
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+node_modules
+npm-debug.log
+pnpm-debug.log
+.next
+
+.env*
+!.env.production
+next-env.d.ts
+
+coverage
