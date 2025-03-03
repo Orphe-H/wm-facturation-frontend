@@ -8,7 +8,7 @@ $ pnpm install
 ```
 - create a .env file based on .env.example
 - set the bckend app url
-- 
+
 ## Getting Started
 
 First, run the development server:
